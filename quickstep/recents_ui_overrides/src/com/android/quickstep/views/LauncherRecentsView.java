@@ -264,12 +264,7 @@ public class LauncherRecentsView extends RecentsView<BaseQuickstepLauncher>
     @Override
     public void setOverviewStateEnabled(boolean enabled) {
         super.setOverviewStateEnabled(enabled);
-        if (enabled) {
-            LauncherState state = mActivity.getStateManager().getState();
-            boolean hasClearAllButton = (state.getVisibleElements(mActivity)
-                    & OVERVIEW_BUTTONS) != 0;
-            setDisallowScrollToClearAll(!hasClearAllButton);
-        }
+        if (enabled) setDisallowScrollToClearAll(true);
     }
 
     @Override

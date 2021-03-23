@@ -114,6 +114,7 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
         View share = findViewById(R.id.action_share);
         share.setOnClickListener(this);
         findViewById(R.id.action_screenshot).setOnClickListener(this);
+        findViewById(R.id.action_clear_all).setOnClickListener(this);
         if (ENABLE_OVERVIEW_SHARE.get()) {
             share.setVisibility(VISIBLE);
             findViewById(R.id.share_space).setVisibility(VISIBLE);
@@ -139,6 +140,8 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
             mCallbacks.onShare();
         } else if (id == R.id.action_screenshot) {
             mCallbacks.onScreenshot();
+        } else if (id == R.id.action_clear_all) {
+            mCallbacks.onPressedClearAll(view);
         }
     }
 

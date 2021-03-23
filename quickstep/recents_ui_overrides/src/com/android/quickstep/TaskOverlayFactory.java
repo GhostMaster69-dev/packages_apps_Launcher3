@@ -167,6 +167,11 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
                     public void onScreenshot() {
                         saveScreenshot(task);
                     }
+
+                    @Override
+                    public void onPressedClearAll(View view) {
+                        mThumbnailView.getTaskView().getRecentsView().dismissAllTasks(view);
+                    }
                 });
             }
         }
@@ -267,5 +272,8 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
 
         /** User has indicated they want to screenshot the current task. */
         void onScreenshot();
+
+        /** User has indicated they want to clear all tasks. */
+        void onPressedClearAll(View view);
     }
 }
