@@ -40,7 +40,7 @@ public final class FeatureFlags {
     private FeatureFlags() { }
 
     public static boolean showFlagTogglerUi(Context context) {
-        return Utilities.IS_DEBUG_DEVICE && Utilities.isDevelopersOptionsEnabled(context);
+        return Utilities.isDevelopersOptionsEnabled(context);
     }
 
     /**
@@ -52,7 +52,7 @@ public final class FeatureFlags {
      * Enable moving the QSB on the 0th screen of the workspace. This is not a configuration feature
      * and should be modified at a project level.
      */
-    public static final boolean QSB_ON_FIRST_SCREEN = true;
+    public static final boolean QSB_ON_FIRST_SCREEN = false;
 
     /**
      * Feature flag to handle define config changes dynamically instead of killing the process.
@@ -79,7 +79,7 @@ public final class FeatureFlags {
             "UNSTABLE_SPRINGS", false, "Enable unstable springs for quickstep animations");
 
     public static final BooleanFlag ENABLE_LOCAL_COLOR_POPUPS = getDebugFlag(
-            "ENABLE_LOCAL_COLOR_POPUPS", false, "Enable local color extraction for popups.");
+            "ENABLE_LOCAL_COLOR_POPUPS", true, "Enable local color extraction for popups.");
 
     public static final BooleanFlag KEYGUARD_ANIMATION = getDebugFlag(
             "KEYGUARD_ANIMATION", true, "Enable animation for keyguard going away on wallpaper");
@@ -145,7 +145,7 @@ public final class FeatureFlags {
             "ENABLE_DEEP_SHORTCUT_ICON_CACHE", true, "R/W deep shortcut in IconCache");
 
     public static final BooleanFlag MULTI_DB_GRID_MIRATION_ALGO = getDebugFlag(
-            "MULTI_DB_GRID_MIRATION_ALGO", true, "Use the multi-db grid migration algorithm");
+            "MULTI_DB_GRID_MIRATION_ALGO", false, "Use the multi-db grid migration algorithm");
 
     public static final BooleanFlag ENABLE_THEMED_ICONS = getDebugFlag(
             "ENABLE_THEMED_ICONS", true, "Enable themed icons on workspace");
@@ -347,8 +347,6 @@ public final class FeatureFlags {
     }
 
     private static BooleanFlag getDebugFlag(String key, boolean defaultValue, String description) {
-        return Utilities.IS_DEBUG_DEVICE
-                ? new DebugFlag(key, defaultValue, description)
-                : new BooleanFlag(key, defaultValue);
+        return new DebugFlag(key, defaultValue, description);
     }
 }
