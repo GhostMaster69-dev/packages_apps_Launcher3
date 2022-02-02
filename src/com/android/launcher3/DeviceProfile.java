@@ -337,17 +337,26 @@ public class DeviceProfile {
         numShownAllAppsColumns =
                 isTwoPanels ? inv.numDatabaseAllAppsColumns : inv.numAllAppsColumns;
         hotseatBarSizeExtraSpacePx = 0;
+        final boolean showQSB = Utilities.showQSB(context);
         hotseatBarTopPaddingPx =
-                res.getDimensionPixelSize(R.dimen.dynamic_grid_hotseat_bottom_non_tall_padding);
+                res.getDimensionPixelSize(showQSB
+                        ? R.dimen.dynamic_grid_hotseat_top_padding_widget
+                        : R.dimen.dynamic_grid_hotseat_top_padding);
         hotseatBarBottomPaddingPx = (isTallDevice ? 0
-                : res.getDimensionPixelSize(R.dimen.dynamic_grid_hotseat_bottom_non_tall_padding))
-                + res.getDimensionPixelSize(R.dimen.dynamic_grid_hotseat_bottom_padding);
+                : res.getDimensionPixelSize(showQSB
+                        ? R.dimen.dynamic_grid_hotseat_bottom_non_tall_padding_widget
+                        : R.dimen.dynamic_grid_hotseat_bottom_non_tall_padding))
+                + res.getDimensionPixelSize(showQSB
+                        ? R.dimen.dynamic_grid_hotseat_bottom_padding_widget
+                        : R.dimen.dynamic_grid_hotseat_bottom_padding);
         hotseatBarSidePaddingEndPx =
                 res.getDimensionPixelSize(R.dimen.dynamic_grid_hotseat_side_padding);
         // Add a bit of space between nav bar and hotseat in vertical bar layout.
         hotseatBarSidePaddingStartPx = isVerticalBarLayout() ? workspacePageIndicatorHeight : 0;
         hotseatExtraVerticalSize =
-                res.getDimensionPixelSize(R.dimen.dynamic_grid_hotseat_extra_vertical_size);
+                res.getDimensionPixelSize(showQSB
+                        ? R.dimen.dynamic_grid_hotseat_extra_vertical_size_widget
+                        : R.dimen.dynamic_grid_hotseat_extra_vertical_size);
         updateHotseatIconSize(
                 pxFromDp(inv.iconSize[InvariantDeviceProfile.INDEX_DEFAULT], mMetrics, 1f));
 
