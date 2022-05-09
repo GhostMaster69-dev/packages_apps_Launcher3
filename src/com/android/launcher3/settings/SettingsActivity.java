@@ -24,8 +24,6 @@ import static com.android.launcher3.OverlayCallbackImpl.KEY_ENABLE_MINUS_ONE;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -48,6 +46,7 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.internal.util.krypton.KryptonUtils;
 import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.InvariantDeviceProfile;
 import com.android.launcher3.LauncherFiles;
@@ -67,8 +66,7 @@ import java.util.List;
  * Settings activity for Launcher. Currently implements the following setting: Allow rotation
  */
 public class SettingsActivity extends CollapsingToolbarBaseActivity
-        implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback {
 
     /** List of fragments that can be hosted by this activity. */
     private static final List<String> VALID_PREFERENCE_FRAGMENTS = Collections.singletonList(
@@ -82,7 +80,7 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
     public static final String EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key";
     public static final String EXTRA_SHOW_FRAGMENT_ARGS = ":settings:show_fragment_args";
     private static final int DELAY_HIGHLIGHT_DURATION_MILLIS = 600;
-    public static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
+    private static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
 
     @VisibleForTesting
     static final String EXTRA_FRAGMENT = ":settings:fragment";
@@ -115,7 +113,6 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
             // Display the fragment as the main content.
             fm.beginTransaction().replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame, f).commit();
         }
-        Utilities.getPrefs(getApplicationContext()).registerOnSharedPreferenceChangeListener(this);
     }
 
     /**
@@ -139,17 +136,13 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
         }
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    }
-
     private boolean startPreference(String fragment, Bundle args, String key) {
-        if (Utilities.ATLEAST_P && getSupportFragmentManager().isStateSaved()) {
+        final FragmentManager fm = getSupportFragmentManager();
+        if (Utilities.ATLEAST_P && fm.isStateSaved()) {
             // Sometimes onClick can come after onPause because of being posted on the handler.
             // Skip starting new preferences in that case.
             return false;
         }
-        final FragmentManager fm = getSupportFragmentManager();
         final Fragment f = fm.getFragmentFactory().instantiate(getClassLoader(), fragment);
         if (f instanceof DialogFragment) {
             f.setArguments(args);
@@ -317,11 +310,7 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
         }
 
         public static boolean isGSAEnabled(Context context) {
-            try {
-                return context.getPackageManager().getApplicationInfo(GSA_PACKAGE, 0).enabled;
-            } catch (PackageManager.NameNotFoundException e) {
-                return false;
-            }
+            return KryptonUtils.isPackageInstalled(context, GSA_PACKAGE, false /** ignoreState*/);
         }
 
         private void updateIsGoogleAppEnabled() {
